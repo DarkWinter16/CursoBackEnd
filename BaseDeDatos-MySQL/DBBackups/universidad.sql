@@ -23,7 +23,7 @@ SET @@SESSION.SQL_LOG_BIN= 0;
 -- GTID state at the beginning of the backup 
 --
 
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ 'dd7bf722-dc41-11f1-a6f6-a6aec686c5ad:1-44';
+SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ 'dd7bf722-dc41-11f1-a6f6-a6aec686c5ad:1-58';
 
 --
 -- Table structure for table `correos`
@@ -35,8 +35,11 @@ DROP TABLE IF EXISTS `correos`;
 CREATE TABLE `correos` (
   `id` int NOT NULL AUTO_INCREMENT,
   `email` varchar(45) NOT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `estudiante_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_correos_estudiantes1_idx` (`estudiante_id`),
+  CONSTRAINT `fk_correos_estudiantes1` FOREIGN KEY (`estudiante_id`) REFERENCES `estudiantes` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -45,6 +48,7 @@ CREATE TABLE `correos` (
 
 LOCK TABLES `correos` WRITE;
 /*!40000 ALTER TABLE `correos` DISABLE KEYS */;
+INSERT INTO `correos` VALUES (1,'pedro@universidad.es',1);
 /*!40000 ALTER TABLE `correos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -64,7 +68,9 @@ CREATE TABLE `estudiantes` (
   `fechaDeMatriculacion` date NOT NULL,
   `totalDeAsignaturas` int NOT NULL,
   `facultad_id` int NOT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `fk_estudiantes_facultades_idx` (`facultad_id`),
+  CONSTRAINT `fk_estudiantes_facultades` FOREIGN KEY (`facultad_id`) REFERENCES `facultades` (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -74,7 +80,7 @@ CREATE TABLE `estudiantes` (
 
 LOCK TABLES `estudiantes` WRITE;
 /*!40000 ALTER TABLE `estudiantes` DISABLE KEYS */;
-INSERT INTO `estudiantes` VALUES (1,'Pedro','Ventocilla','Melendres','HOMBRE','2026-11-15',6,1),(2,'Ana','Casal','Perez','MUJER','2026-11-15',5,2),(3,'Franky','Suarez','Barriga','OTRO','2026-11-15',4,3);
+INSERT INTO `estudiantes` VALUES (1,'Pedro','Ventocilla','Melendres','HOMBRE','2026-11-15',6,1),(2,'Ana','Lopez',NULL,'MUJER','2026-11-15',5,2),(3,'Franky','Ruiz','Perez','OTRO','2026-11-15',4,3);
 /*!40000 ALTER TABLE `estudiantes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -98,7 +104,7 @@ CREATE TABLE `facultades` (
 
 LOCK TABLES `facultades` WRITE;
 /*!40000 ALTER TABLE `facultades` DISABLE KEYS */;
-INSERT INTO `facultades` VALUES (1,'Informatica'),(2,'Medicina'),(3,'RRHH');
+INSERT INTO `facultades` VALUES (1,'INFORMATICA'),(2,'MEDICINA'),(3,'RRHH');
 /*!40000 ALTER TABLE `facultades` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -112,8 +118,11 @@ DROP TABLE IF EXISTS `telefonos`;
 CREATE TABLE `telefonos` (
   `id` int NOT NULL AUTO_INCREMENT,
   `numero` varchar(45) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb3;
+  `estudiante_id` int NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `fk_telefonos_estudiantes1_idx` (`estudiante_id`),
+  CONSTRAINT `fk_telefonos_estudiantes1` FOREIGN KEY (`estudiante_id`) REFERENCES `estudiantes` (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -122,6 +131,7 @@ CREATE TABLE `telefonos` (
 
 LOCK TABLES `telefonos` WRITE;
 /*!40000 ALTER TABLE `telefonos` DISABLE KEYS */;
+INSERT INTO `telefonos` VALUES (1,'123456789',1);
 /*!40000 ALTER TABLE `telefonos` ENABLE KEYS */;
 UNLOCK TABLES;
 SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
@@ -135,4 +145,4 @@ SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-11-17 14:23:31
+-- Dump completed on 2026-11-17 17:14:03
